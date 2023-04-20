@@ -1,44 +1,40 @@
-#ifdef USE_ARDUINO
-
-#include "fastled_dev.h"
+#include "esphome.h"
 #include "esphome/core/log.h"
+#include "fastled_dev.h"
+
+#include <Arduino.h>
+#include <FastLED.h>
+#define NUM_LEDS 8
+CRGB leds[NUM_LEDS];
+
+#define PIN_NEOPIXEL 48
+#define BRIGHTNESS 10   // Range: 0-255
 
 namespace esphome {
     namespace fastled_dev {
 
         static const char *const TAG = "fastled_dev";
 
-        void FastLEDLightOutputDev::setup() {
-            ESP_LOGCONFIG(TAG, "Setting up FastLED light...");
-            this->controller_->init();
-            this->controller_->setLeds(this->leds_, this->num_leds_);
-            this->effect_data_ = new uint8_t[this->num_leds_];  // NOLINT
-            if (!this->max_refresh_rate_.has_value()) {
-                this->set_max_refresh_rate(this->controller_->getMaxRefreshRate());
+        void FastLEDDev::setup() {
+            ESP_LOGD(TAG, "Setting up FastLED light...");
+
+            FastLED.addLeds<NEOPIXEL, PIN_NEOPIXEL>(leds, NUM_LEDS);
+            FastLED.setBrightness(BRIGHTNESS);
+
+            for(int i=0; i<NUM_LEDS; i++){
+                leds[i] = 0x00FF00;
             }
+            FastLED.show();
         }
 
-        void FastLEDLightOutputDev::dump_config() {
-            ESP_LOGCONFIG(TAG, "FastLED light:");
-            ESP_LOGCONFIG(TAG, "  Num LEDs: %u", this->num_leds_);
-            ESP_LOGCONFIG(TAG, "  Max refresh rate: %u", *this->max_refresh_rate_);
-        }
-        void FastLEDLightOutputDev::write_state(light::LightState *state) {
-            // protect from refreshing too often
-            uint32_t now = micros();
-            if (*this->max_refresh_rate_ != 0 && (now - this->last_refresh_) < *this->max_refresh_rate_) {
-                // try again next loop iteration, so that this change won't get lost
-                this->schedule_show();
-                return;
-            }
-            this->last_refresh_ = now;
-            this->mark_shown_();
+        void FastLEDDev::loop() {
 
-            ESP_LOGVV(TAG, "Writing RGB values to bus...");
-            this->controller_->showLeds();
+        }
+
+        void FastLEDDev::dump_config() {
+            ESP_LOGD(TAG, "FastLED light:");
+            ESP_LOGD(TAG, "  Num LEDs: %u", NUM_LEDS);
         }
 
     }  // namespace fastled_dev
 }  // namespace esphome
-
-#endif  // USE_ARDUINO

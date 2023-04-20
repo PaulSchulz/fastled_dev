@@ -3,9 +3,38 @@
 ** Contents :TOC:
 - [[#fastled-for-development][FastLED for Development]]
   - [[#introduction][Introduction]]
+  - [[#configuration][Configuration]]
 
 ** Introduction
+This repository was created to host a development version of the 'fastled'
+component for testing.
 
-This repository was created to hose a development version of the FastLED
-repository for testing.
+It has a minimal amount of functionality implemented to get the hardware (LEDs)
+to work.
 
+At the moment, the code assumes the following (hard coded):
+- NEOPIXEL Chipset is set
+- 8 LEDS
+- attached to GPIO48
+
+It should light up the 8 LEDs in green (0x00FF00).
+
+**** Testing
+This code was tested to work with:
+- Heltec Wifi LoRa V3, ESP32-S3 board.
+- WS2812B RGB LEDs, powered with 5V, signal 3.3V
+
+** Configuration
+In YAML require:
+#+begin_src yaml
+  esphome:
+    ..
+    libraries:
+      - FastLED
+
+  ..
+  fastled_dev:
+#+end_src
+
+Please be aware that this configuration will try to download and use the latest
+version of FastLED (currently 3.5.0) 
