@@ -25,16 +25,23 @@ This code was tested to work with:
 - WS2812B RGB LEDs, powered with 5V, signal 3.3V
 
 ** Configuration
-In YAML require:
+In YAML, require:
 #+begin_src yaml
   esphome:
-    ..
+  ..
     libraries:
       - FastLED
+  ..      
+  external_components:
+    - source:
+        type: git
+        url: https://github.com/PaulSchulz/fastled_dev
+      components: [fastled_dev]
 
-  ..
   fastled_dev:
 #+end_src
 
 Please be aware that this configuration will try to download and use the latest
-version of FastLED (currently 3.5.0) 
+version of FastLED (currently 3.5.0), which will conflict with any other FastLED
+version which may be installed.
+
