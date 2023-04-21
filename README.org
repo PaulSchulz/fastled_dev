@@ -19,10 +19,17 @@ At the moment, the code assumes the following (hard coded):
 
 It should light up the 8 LEDs in green (0x00FF00).
 
-**** Testing
+*** Testing
 This code was tested to work with:
 - Heltec Wifi LoRa V3, ESP32-S3 board.
 - WS2812B RGB LEDs, powered with 5V, signal 3.3V
+
+*** Motivation
+There was a issue getting the FastLED library working with the ESP32-S3 which ment
+that the library was kept at version 3.3.2.
+
+Some details are here: 
+- https://github.com/esphome/esphome/pull/4257
 
 ** Configuration
 In YAML, require:
